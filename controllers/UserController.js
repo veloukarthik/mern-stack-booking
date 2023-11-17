@@ -19,13 +19,23 @@ const login = (req,res) =>{
 }
 
 
-const register = (req,res) =>{
+const register =  async (req,res) =>{
     
-    const {email,password} = req.body;
+    const {name,email,mobile,password,gender,token} = req.body;
 
+    const check = await User.find({email:email,mobile:mobile});
 
+    if(check.length > 0)
+    {
+        return  res.json({'status':false,'message':'Users already exists',});
+    }
 
-    res.json({'message':'I am register API'});
+    let user = await User.create({name:name,email:email,mobile:mobile,password:password,token:token,gender:gender})
+
+    if(user)
+    {
+        return res.json({'status':true,'message':"You account is registered successfully"});
+    }
 }
 
 module.exports = {
