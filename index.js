@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
 const route = require('./routes/route');
+const bodyParser = require('body-parser');
 const app = express();
 
 const PORT = process.env.PORT_NUMBER || 8000;
@@ -9,8 +10,13 @@ const MONGO_URI = process.env.MONGO_URL;
 
 
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use('/', route);
+// parse application/json
+app.use(bodyParser.json())
+
+app.use('/api', route);
 
 mongoose.connect(MONGO_URI, {
     useUnifiedTopology: true
@@ -23,7 +29,7 @@ mongoose.connect(MONGO_URI, {
     })
 
 app.listen(PORT, () => {
-    console.log("This server is listening 8000 port");
+    console.log(`This server is listening ${PORT} port`);
 })
 
 
