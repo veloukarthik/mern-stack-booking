@@ -7,25 +7,38 @@ const Schema = mongoose.Schema;
 const ExpenseSchema = new Schema(
     {
         userid: {
-            type: Schema.Types.ObjectId, ref:'users'
+            type: Schema.Types.ObjectId, ref:'users',
+            require:true,
+            index:true
         },
         expense: {
             type: String,
+            require:true,
+            index:true
         },
         reason: {
             type: String,
+            require:true,
+            index:true
         },
         paymentmethod: {
-            type: String
+            type: String,
+            require:true,
+            index:true
         },
         type:{
-            type:String
+            type:String,
+            require:true,
+            index:true
         },
         amount: {
-            type: Number
+            type: Number,
+            require:true,
+            index:true
         },
         paid_date:{
-            type:Date
+            type:Date,
+            default:Date.now()
         }
         
     },

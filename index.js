@@ -18,9 +18,7 @@ app.use(bodyParser.json())
 
 app.use('/api', route);
 
-mongoose.connect(MONGO_URI, {
-    useUnifiedTopology: true
-})
+mongoose.connect(MONGO_URI, {})
     .then((res) => {
         console.log("mongoose connected")
     })
