@@ -13,27 +13,27 @@ const ExpenseSchema = new Schema(
         },
         expense: {
             type: String,
-            require:true,
+            require:[true,'Please enter the expense details'],
             index:true
         },
         reason: {
             type: String,
-            require:true,
+            require:[true,'Please enter the reason'],
             index:true
         },
         paymentmethod: {
             type: String,
-            require:true,
+            require:[true, 'Please enter the payment method'],
             index:true
         },
         type:{
             type:String,
-            require:true,
+            require:[true,'Please enter the payment type'],
             index:true
         },
         amount: {
             type: Number,
-            require:true,
+            require:[true,'Please enter the amount'],
             index:true
         },
         paid_date:{

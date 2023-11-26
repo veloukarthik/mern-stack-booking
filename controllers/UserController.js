@@ -3,39 +3,76 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const login = (req,res) =>{
 
-    const {email,password} = req.body;
+const maxAge = 3 * 24 * 60 * 60;
 
-    const saltRounds = 10;
+const login = async (req, res) => {
 
-    let encryptPassword = bcrypt.hash(password, saltRounds, function(err, hash) {
-        // Store hash in your password DB.
-        return hash;
-    });
-    var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+    try {
+        const { email, password } = req.body;
 
-    res.json({"email":email,"password":token});
+        let user = await User.findOne({ email });
+
+        if (user) {
+            let comparePassword = await bcrypt.compare(password, user.password);
+
+            if (comparePassword) {
+                let id = user._id
+
+                var token = jwt.sign({ id }, 'expense-login', { expiresIn: maxAge });
+
+                let tokenupdate = await User.findOneAndUpdate({ email: email }, { token: token }, { new: true });
+
+                return res.json({ 'status': true, 'message': 'successfully logged in', 'user': tokenupdate });
+            }
+            return res.status(400).json({ 'status': false, 'message': 'Incorrect password' })
+        }
+
+        return res.status(400).json({ 'status': false, 'message': 'Incorrect email' });
+    }
+    catch (err) {
+        return res.status(400).json({ 'status': false, 'message': err });
+    }
+
 }
 
 
-const register =  async (req,res) =>{
-    
-    const {name,email,mobile,password,gender,token} = req.body;
+const register = async (req, res) => {
 
-    const check = await User.find({email:email,mobile:mobile});
 
-    if(check.length > 0)
-    {
-        return  res.json({'status':false,'message':'Users already exists',});
+    try {
+        const { name, email, mobile, password, gender } = req.body;
+
+        
+
+        const check = await User.find({ email: email, mobile: mobile });
+
+        const salt = await bcrypt.genSalt();
+
+        let encryptPassword = await bcrypt.hash(password, salt);
+
+
+        if (check.length > 0) {
+            return res.status(400).json({ 'status': false, 'message': 'Users already exists' });
+        }
+
+        let user = await User.create({ name: name, email: email, mobile: mobile, password: encryptPassword, gender: gender })
+
+        if (user) {
+
+            let id = user._id;
+
+            let token = jwt.sign({ id }, 'expense-login', { expiresIn: maxAge });
+
+            let tokenupdate = await User.findOneAndUpdate({ email: email }, { token: token }, { new: true });
+
+            return res.status(200).json({ 'status': true, 'message': "You account is registered successfully" });
+        }
+    }
+    catch (err) {
+        return res.status(400).json({ 'status': false, 'message': err });
     }
 
-    let user = await User.create({name:name,email:email,mobile:mobile,password:password,token:token,gender:gender})
-
-    if(user)
-    {
-        return res.json({'status':true,'message':"You account is registered successfully"});
-    }
 }
 
 module.exports = {
