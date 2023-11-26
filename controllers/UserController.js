@@ -21,9 +21,9 @@ const login = async (req, res) => {
 
                 var token = jwt.sign({ id }, 'expense-login', { expiresIn: maxAge });
 
-                let tokenupdate = await User.findOneAndUpdate({ email: email }, { token: token }, { new: true });
+                let tokenupdate = await User.findOneAndUpdate({ email: email }, { token: token }, { new: true }).select(['name','email','mobile','gender','token']);
 
-                return res.json({ 'status': true, 'message': 'successfully logged in', 'user': tokenupdate });
+                return res.json({ 'status': true, 'message': 'successfully logged in', 'data': tokenupdate });
             }
             return res.status(400).json({ 'status': false, 'message': 'Incorrect password' })
         }

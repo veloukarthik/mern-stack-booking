@@ -7,11 +7,11 @@ const router = express.Router();
 
 router.get('/',Auth,Home.home)
 
-router.post('/login',Auth,User.login);
+router.post('/login',User.login);
 
-router.post('/register',Auth,User.register);
+router.post('/register',User.register);
 
-router.post('/expenses',Expense.getAllExpense);
+router.post('/expenses',Auth,Expense.getAllExpense);
 
 router.post('/expense/store',Expense.storeExpense);
 
