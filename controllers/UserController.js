@@ -21,7 +21,7 @@ const login = async (req, res) => {
 
                 var token = jwt.sign({ id }, 'expense-login', { expiresIn: maxAge });
 
-                let tokenupdate = await User.findOneAndUpdate({ email: email }, { token: token }, { new: true }).select(['name','email','mobile','gender','token']);
+                let tokenupdate = await User.findOneAndUpdate({ email: email }, { token: token }, { new: true }).select(['name', 'email', 'mobile', 'gender', 'token']);
 
                 return res.json({ 'status': true, 'message': 'successfully logged in', 'data': tokenupdate });
             }
@@ -43,7 +43,6 @@ const register = async (req, res) => {
     try {
         const { name, email, mobile, password, gender } = req.body;
 
-        
 
         const check = await User.find({ email: email, mobile: mobile });
 
@@ -75,7 +74,36 @@ const register = async (req, res) => {
 
 }
 
+const getToken = (req) => {
+    const token = req.headers.authorization.split(" ");
+
+    const secret = 'expense-login';
+
+    const decoded = jwt.verify(token[1], secret);
+
+    return decoded.id;
+}
+
+const myaccount = async (req, res) => {
+
+    try {
+        let userId = getToken(req);
+
+        let users = await User.findById(userId).select(['name', 'email', 'mobile', 'gender', 'token']);
+        ;
+
+        return res.status(200).json({ 'status': true, 'message': "You account details",'user':users });
+    }
+    catch (e) {
+        return res.status(400).json({ 'status': false, 'message': err });
+    }
+
+
+
+}
+
 module.exports = {
     login,
-    register
+    register,
+    myaccount
 }

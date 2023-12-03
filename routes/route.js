@@ -11,6 +11,8 @@ router.post('/login',User.login);
 
 router.post('/register',User.register);
 
+router.post('/my-account',User.myaccount);
+
 router.post('/expenses',Auth,Expense.getAllExpense);
 
 router.post('/expense/store',Expense.storeExpense);
