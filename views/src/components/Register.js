@@ -77,7 +77,7 @@ export default function Register() {
                                     <input type='radio' name="gender" onChange={(e)=> setGender(e.target.value)} value="Male" />Male
                                     <input type="radio" name="gender" onChange={(e)=> setGender(e.target.value)} value="Female" />Female
                                     <input type="radio" name="gender" onChange={(e)=> setGender(e.target.value)}   value="Others" />Others <br /><br />
-                                    <button className="btn" type="submit">Log In</button>
+                                    <button className="btn" type="submit">Register</button>
                                 </form>
 
                                 <p className="account">Already have an account? <a href="/">Login</a></p>
