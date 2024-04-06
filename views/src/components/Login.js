@@ -15,7 +15,7 @@ export default function Login() {
             password: password
         }
 
-        fetch('http://localhost:8000/api/login', {
+        fetch('/api/login', {
             method: 'post',
             headers: {
                 'content-type': 'application/json'

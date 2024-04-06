@@ -26,7 +26,7 @@ export default function Register() {
             password:password
         }
 
-        fetch('http://localhost:8000/api/register', {
+        fetch('/api/register', {
             method: 'post',
             headers: {
                 'content-type': 'application/json'
