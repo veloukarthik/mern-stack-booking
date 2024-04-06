@@ -20,7 +20,7 @@ export default function ListsExpense() {
 
   const getExpenses = () => {
 
-    services.post('expenses')
+    services.post('/api/expenses')
       .then((result) => result.json())
       .then((res) => {
         console.log("res", res);

@@ -10,7 +10,7 @@ export const services = {
         let data = {
 
         }
-        return fetch(API_URL+url,{
+        return fetch(url,{
           method:'post',
           headers:{
             'authorization':'Bearer '+token
