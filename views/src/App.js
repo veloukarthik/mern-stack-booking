@@ -4,7 +4,8 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
 import PageNotFound from './components/404';
-
+/* The following line can be included in your src/index.js or App.js file */
+import './App.scss';
 
 function App() {
 

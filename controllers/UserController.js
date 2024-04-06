@@ -95,7 +95,7 @@ const myaccount = async (req, res) => {
         return res.status(200).json({ 'status': true, 'message': "You account details",'user':users });
     }
     catch (e) {
-        return res.status(400).json({ 'status': false, 'message': err });
+        return res.status(400).json({ 'status': false, 'message': e });
     }
 
 

@@ -36,9 +36,6 @@ export default function Register() {
             .then((result) => result.json())
             .then((res) => {
                 if (res.status == true) {
-                    localStorage.setItem('loggedIn', true);
-                    localStorage.setItem('token', res.data.token);
-                    setLoggedIn(true);
                     return redirect('/');
                 }
                 console.log("res", res);

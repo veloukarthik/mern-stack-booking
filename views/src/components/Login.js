@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { redirect, Navigate } from 'react-router-dom';
 export default function Login() {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('karthikvelou@gmail.com');
+    const [password, setPassword] = useState('123456');
     const [isLoggedIn, setLoggedIn] = useState(false);
+    const [errorMessage,setError] = useState('');
 
     const userLogin = (e) => {
         e.preventDefault();
@@ -24,11 +25,16 @@ export default function Login() {
             .then((result) => result.json())
             .then((res) => {
                 if (res.status == true) {
+                    setError('');
                     localStorage.setItem('loggedIn', true);
                     localStorage.setItem('token', res.data.token);
                     setLoggedIn(true);
+                    
                 }
-                console.log("res", res);
+                if(res.status == false)
+                {
+                    setError(res.message);
+                }
             })
     }
 
@@ -45,9 +51,10 @@ export default function Login() {
                         <div className="main-hotair">
                             <div className="content-wthree">
                                 <h2>Log In</h2>
+                                <div className={errorMessage ? 'alert alert-danger' : 'd-none'}>{errorMessage}</div>
                                 <form action="#" onSubmit={(e) => userLogin(e)} method="post">
-                                    <input type="email" className="text" name="text" onChange={(e) => setEmail(e.target.value)} placeholder="User Name" required="" autoFocus />
-                                    <input type="password" className="text" onChange={(e) => setPassword(e.target.value)} name="password" placeholder="User Password" required="" autoFocus />
+                                    <input type="email" className="text" name="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="User Name" required="" autoFocus />
+                                    <input type="password" className="text" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder="User Password" required="" autoFocus />
                                     <button className="btn" type="submit">Log In</button>
                                 </form>
 
