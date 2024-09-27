@@ -26,57 +26,61 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_PROJECT_ID, // I get no error here
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL, // I get no error here
+        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') // NOW THIS WORKS!!!
+    }),
     storageBucket: 'kv-posts.appspot.com'
 });
 const bucket = admin.storage().bucket();
 
-app.get('/firebase',(req,res)=>{
-    
-    bucket.getFiles().then(results=>{
+app.get('/firebase', (req, res) => {
+
+    bucket.getFiles().then(results => {
         let [files] = results
-        files.forEach(file=>console.log(file.name))
+        files.forEach(file => console.log(file.name))
         // onSuccess(res)
-        return res.json({files,status:true}).status(200);
-    }).catch(err=>{
+        return res.json({ files, status: true }).status(200);
+    }).catch(err => {
         console.log(err)
-        return res.json({err:err,'status':false}).status(400);
+        return res.json({ err: err, 'status': false }).status(400);
         // onError(err)
     })
 })
 
-app.get('/firebase-download',(req,res)=>{
+app.get('/firebase-download', (req, res) => {
 
     bucket.file('images/image.png').download({
         destination: './downloads/1.png'
-    }).then(results=>{
+    }).then(results => {
         console.log(results)
 
-        return res.json({results,status:true}).status(200);
+        return res.json({ results, status: true }).status(200);
         // onSuccess(res)
-    }).catch(err=>{
+    }).catch(err => {
         console.log(err)
-        return res.json({err:err,'status':false}).status(400);
+        return res.json({ err: err, 'status': false }).status(400);
         // onError(err)
     })
 })
 
-app.get('/firebase-upload',async (req,res)=>{
+app.get('/firebase-upload', async (req, res) => {
     bucket.upload('downloads/image.png', {
         destination: 'images/image.png',
         metadata: {
-            metadata: {firebaseStorageDownloadTokens: uuidv4()}
+            metadata: { firebaseStorageDownloadTokens: uuidv4() }
         }
-    }).then(async (results)=>{
+    }).then(async (results) => {
         console.log(results)
         const options = {
             action: 'read',
             expires: Date.now() + 24 * 60 * 60 * 1000 // 1 day
-         }
+        }
         const ImageURl = await bucket.file('images/image.png').getSignedUrl(options);
         return res.send(ImageURl);
         // onSuccess(res)
-    }).catch(err=>{
+    }).catch(err => {
         console.log(err)
         // onError(err)
         return res.send(err);
